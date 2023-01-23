@@ -1,6 +1,7 @@
 import parse
 import requests
 import threading
+
 import concurrent.futures
 
 
@@ -15,9 +16,9 @@ def get_session():
 
 def download_site(site):
     session = get_session()
+    print(site)
     with session.get(site) as response:
-        parsed_page = parse.PageParser(response)
-        return parsed_page.parse()
+        return response
 
 
 def download_all_sites(sites):
@@ -26,6 +27,9 @@ def download_all_sites(sites):
 
 
 if __name__ == '__main__':
-    list_of_urls = [f'https://www.truecar.com/used-cars-for-sale/listings/?page={page}' for page in range(1, 364)]
+    list_of_urls = [f'https://www.truecar.com/used-cars-for-sale/listings/?page={page}' for page in range(1, 10)]
     all_sites = download_all_sites(list_of_urls)
-    print(len(parse.PageParser.data))
+    print('Download is complete')
+
+    parsing = parse.concurrent_parse(all_sites)
+    print(parsing)
