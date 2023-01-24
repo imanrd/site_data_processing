@@ -3,6 +3,11 @@ import concurrent.futures
 from bs4 import BeautifulSoup
 
 
+def parse_id(car):
+    vin = car.select_one('div [class="vehicle-card-vin-carousel-challenger mt-1 text-xs"]').text
+    return vin[3:]
+
+
 def parse_model(car):
     return car.select_one('span[class="truncate"]').text
 
@@ -29,14 +34,18 @@ def parse(page):
     car_list = []
     soup = BeautifulSoup(page.text, 'html.parser')
     for car in soup.select('[class="linkable card card-shadow vehicle-card"]'):
+        vin = parse_id(car)
         model = parse_model(car)
         price = parse_price(car)
         year = parse_year(car)
         mileage = parse_mileage(car)
-        car_data = {'model': model,
+        car_data = {
+                    'vin': vin,
+                    'model': model,
                     'price': price,
                     'year': year,
-                    'mileage': mileage}
+                    'mileage': mileage
+                    }
         car_list.append(car_data)
         print(car_data)
     return car_list
