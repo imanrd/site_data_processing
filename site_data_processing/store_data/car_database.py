@@ -3,15 +3,14 @@ from site_data_processing import fetch_site
 import database
 
 DB_NAME = 'CAR_DB'
-table = 'car'
+TABLE_NAME = 'car'
 
 
 def insert(data):
     cnx = mysql.connector.connect(user='admin', password='')
     cursor = cnx.cursor()
     cursor.execute(f"USE {DB_NAME}")
-    stmt = f"INSERT INTO  {table} (id, model, price, year, mileage) VALUES (%s, %s, %s, %s, %s) " \
-           f"ON DUPLICATE KEY UPDATE id=%s"
+    stmt = f"INSERT IGNORE INTO  {TABLE_NAME} (vin, model, price, year, mileage) VALUES (%s, %s, %s, %s, %s) "
     try:
         cursor.executemany(stmt, data)
     except Exception as e:
@@ -23,9 +22,10 @@ def insert(data):
 def create():
     TABLES = {}
 
-    TABLES['car'] = (
-        "CREATE TABLE `car` ("
-        "  `id` varchar(50) NOT NULL ,"
+    TABLES[TABLE_NAME] = (
+        f"CREATE TABLE {TABLE_NAME} ("
+        "  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,"
+        "  `vin` varchar(50) NOT NULL UNIQUE,"
         "  `model` varchar(50) NOT NULL,"
         "  `price` int(10) NOT NULL,"
         "  `year` int(10) NOT NULL,"
@@ -43,14 +43,8 @@ if __name__ == '__main__':
 
     parsing = fetch_site.parse.concurrent_parse(all_sites)
 
-    print(parsing)
-
-    parsed = [tuple(dic.values()) for dic in parsing]
-
-    print(parsed)
-
     print('Parsing is complete')
 
     create()
 
-    insert(parsed)
+    insert(parsing)

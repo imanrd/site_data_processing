@@ -39,15 +39,16 @@ def parse(page):
         price = parse_price(car)
         year = parse_year(car)
         mileage = parse_mileage(car)
-        car_data = {
+        car_data_to_show = {
                     'vin': vin,
                     'model': model,
                     'price': price,
                     'year': year,
                     'mileage': mileage
                     }
-        car_list.append(car_data)
-        print(car_data)
+        car_data_to_save = (vin, model, price, year, mileage)
+        car_list.append(car_data_to_save)
+        print(car_data_to_show)
     return car_list
 
 
