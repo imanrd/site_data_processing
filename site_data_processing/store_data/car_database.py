@@ -1,6 +1,5 @@
 import mysql.connector
-from site_data_processing import fetch_site
-import database
+from . import database
 
 DB_NAME = 'CAR_DB'
 TABLE_NAME = 'car'
@@ -34,17 +33,3 @@ def create():
         ") ENGINE=InnoDB")
 
     database.DataBase(DB_NAME, TABLES)
-
-
-if __name__ == '__main__':
-    list_of_urls = [f'https://www.truecar.com/used-cars-for-sale/listings/?page={page}' for page in range(1, 25)]
-    all_sites = fetch_site.fetch.download_all_sites(list_of_urls)
-    print('Download is complete')
-
-    parsing = fetch_site.parse.concurrent_parse(all_sites)
-
-    print('Parsing is complete')
-
-    create()
-
-    insert(parsing)

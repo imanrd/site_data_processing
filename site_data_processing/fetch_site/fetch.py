@@ -23,9 +23,3 @@ def download_site(site):
 def download_all_sites(sites):
     with concurrent.futures.ThreadPoolExecutor(max_workers=80) as executor:
         return executor.map(download_site, sites)
-
-
-if __name__ == '__main__':
-    list_of_urls = [f'https://www.truecar.com/used-cars-for-sale/listings/?page={page}' for page in range(1, 10)]
-    all_sites = download_all_sites(list_of_urls)
-    print('Download is complete')
