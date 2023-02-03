@@ -31,19 +31,17 @@ def main():
     y_test = np.asanyarray(test[['price']])
     score = regressor.score(x_test, y_test)
     print("Model score: %.2f" % score)
-    # model_number = int(''.join(str(i) for i in le.transform(['Ford Super Duty F-250'])))
     model_number = random.randint(0, number_of_distinct_models)
     max_year = new_data[new_data.model == model_number].year.max()
     min_year = new_data[new_data.model == model_number].year.min()
     model_year = random.randint(min_year, max_year)
     model_mileage = random.randint(0, data.mileage.max())
-    # print(data[data.model == 'Ford Super Duty F-250'].year.max())
     predict = regressor.predict([[model_number, model_year, model_mileage]])
-    predict = ''.join(str(i) for i in predict)
+    predict = ''.join(str(round(i)) for i in predict)
     model_name = ''.join(le.inverse_transform([model_number]))
-    print(model_name)
+    print(data[data.model == model_name])
     print(f'for {model_name} of year {model_year} with mileage '
-          f'{model_mileage} ml estimates:\n\t\t\t\t{predict}')
+          f'{model_mileage}, the model estimates:\n\t\t\t\t${predict}')
     return score
 
 
